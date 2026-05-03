@@ -22,6 +22,10 @@ Incluye dos herramientas:
 - Vista previa de la imagen antes de convertir
 - Íntegramente en español
 
+
+![rgb2cmyk-screenshot.png](rgb2cmyk-screenshot.png)
+
+
 ---
 
 ## Descarga e instalación
