@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleName</key>
+  <string>RGB to CMYK</string>
+  <key>CFBundleDisplayName</key>
+  <string>RGB to CMYK</string>
+  <key>CFBundleIdentifier</key>
+  <string>com.jesusda.rgb2cmyk-gui</string>
+  <key>CFBundleVersion</key>
+  <string>20260503</string>
+  <key>CFBundleShortVersionString</key>
+  <string>1.0</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>CFBundleSignature</key>
+  <string>????</string>
+  <key>CFBundleExecutable</key>
+  <string>rgb2cmyk-gui</string>
+  <key>CFBundleIconFile</key>
+  <string>AppIcon</string>
+  <key>NSPrincipalClass</key>
+  <string>NSApplication</string>
+  <key>NSHighResolutionCapable</key>
+  <true/>
+</dict>
+</plist>

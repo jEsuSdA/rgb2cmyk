@@ -1,0 +1,53 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <ApplicationIcon>Assets/rgb2cmyk.ico</ApplicationIcon>
+    <AssemblyName>rgb2cmyk-gui</AssemblyName>
+    <RootNamespace>Rgb2CmykGui</RootNamespace>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.*" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.*" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.*" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.*" />
+    <PackageReference Include="Magick.NET-Q8-x64" Version="14.*" />
+    <PackageReference Include="Magick.NET-Q8-arm64" Version="14.*">
+      <ExcludeAssets>compile</ExcludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources/**" />
+    <AvaloniaResource Include="Assets/**" />
+  </ItemGroup>
+  <Target Name="ReplaceSkiaSharpNative" AfterTargets="Publish"
+          Condition="'$(RuntimeIdentifier)' == 'linux-x64'">
+    <PropertyGroup>
+      <NoDepsSkiaDir>$(NuGetPackageRoot)/skiasharp.nativeassets.linux.nodependencies/2.88.9/runtimes/linux-x64/native</NoDepsSkiaDir>
+    </PropertyGroup>
+    <Copy SourceFiles="$(NoDepsSkiaDir)/libSkiaSharp.so" DestinationFolder="$(PublishDir)" />
+  </Target>
+  <Target Name="CreateLinuxWrapper" AfterTargets="ReplaceSkiaSharpNative"
+          Condition="'$(RuntimeIdentifier)' == 'linux-x64'">
+    <Exec Command="echo '#!/bin/bash' > $(PublishDir)run.sh" />
+    <Exec Command="echo 'unset LD_PRELOAD' >> $(PublishDir)run.sh" />
+    <Exec Command="echo 'exec &quot;`dirname \&quot;$0\&quot;`/rgb2cmyk-gui&quot; &quot;$@&quot;' >> $(PublishDir)run.sh" />
+    <Exec Command="chmod +x $(PublishDir)run.sh" />
+  </Target>
+  <Target Name="CreateMacOSAppBundle" AfterTargets="Publish"
+          Condition="'$(RuntimeIdentifier)' == 'osx-arm64'">
+    <PropertyGroup>
+      <AppBundleDir>$(PublishDir)rgb2cmyk-gui.app/Contents</AppBundleDir>
+    </PropertyGroup>
+    <MakeDir Directories="$(AppBundleDir)/MacOS;$(AppBundleDir)/Resources" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)/Assets/Info.plist" DestinationFiles="$(AppBundleDir)/Info.plist" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)/Assets/rgb2cmyk.png" DestinationFiles="$(AppBundleDir)/Resources/AppIcon.png" />
+    <ItemGroup>
+      <PublishFiles Include="$(PublishDir)*" Exclude="$(PublishDir)rgb2cmyk-gui.app/**" />
+    </ItemGroup>
+    <Copy SourceFiles="@(PublishFiles)" DestinationFolder="$(AppBundleDir)/MacOS" />
+    <Exec Command="chmod +x $(AppBundleDir)/MacOS/rgb2cmyk-gui" />
+  </Target>
+</Project>

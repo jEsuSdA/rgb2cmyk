@@ -1,0 +1,68 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Rgb2CmykGui.Views.MainWindow"
+        Title="RGB → CMYK" Width="540" Height="620"
+        Icon="avares://rgb2cmyk-gui/Assets/rgb2cmyk.ico"
+        WindowStartupLocation="CenterScreen">
+    <DockPanel>
+        <Border DockPanel.Dock="Bottom" Background="#F0F0F0" Padding="10,6" BorderBrush="LightGray" BorderThickness="0,1,0,0">
+            <TextBlock FontSize="11" Foreground="Gray" HorizontalAlignment="Center"
+                       Text="Versión 20260503 · (c) jEsuSdA 8) · Publicado bajo GPLv3" />
+        </Border>
+        <StackPanel Margin="18,14,18,10" Spacing="8">
+            <TextBlock Text="Imagen de entrada:" FontWeight="SemiBold"/>
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBox Name="FilePathBox" Grid.Column="0" IsReadOnly="true" />
+                <Button Grid.Column="1" Margin="6,0,0,0" Content="Examinar…" Click="OnBrowseClick" />
+            </Grid>
+            <Border Height="130" BorderBrush="LightGray" BorderThickness="1" CornerRadius="4" ClipToBounds="True">
+                <Image Name="PreviewImg" Stretch="Uniform" />
+            </Border>
+
+            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" Margin="0,2,0,0">
+                <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,4">Perfil CMYK:</TextBlock>
+                <ComboBox Name="ProfileCombo" Grid.Row="0" Grid.Column="1" MinWidth="260" Margin="0,0,0,4" SelectionChanged="OnProfileSelectionChanged" />
+
+                <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,4">Modo:</TextBlock>
+                <ComboBox Name="ModeCombo" Grid.Row="1" Grid.Column="1" Margin="0,0,0,4" SelectedIndex="0">
+                    <ComboBoxItem Content="CMYK completo" />
+                    <ComboBoxItem Content="Solo canal K" />
+                </ComboBox>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,4">Formato:</TextBlock>
+                <ComboBox Name="FormatCombo" Grid.Row="2" Grid.Column="1" Margin="0,0,0,4" SelectedIndex="0" SelectionChanged="OnFormatSelectionChanged">
+                    <ComboBoxItem Content="JPG" />
+                    <ComboBoxItem Content="TIF" />
+                </ComboBox>
+
+                <TextBlock Name="QualityLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,4">Calidad JPG:</TextBlock>
+                <StackPanel Name="QualityPanel" Grid.Row="3" Grid.Column="1" Orientation="Horizontal" Spacing="8" Margin="0,0,0,4">
+                    <Slider Name="QualitySlider" Minimum="1" Maximum="100" Value="90" Width="160" VerticalAlignment="Center" />
+                    <TextBlock Name="QualityValue" VerticalAlignment="Center" Width="28" Text="90" />
+                </StackPanel>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,4">Intent de renderizado:</TextBlock>
+                <ComboBox Name="IntentCombo" Grid.Row="4" Grid.Column="1" Margin="0,0,0,4" SelectedIndex="0">
+                    <ComboBoxItem Content="Relativo" />
+                    <ComboBoxItem Content="Perceptual" />
+                    <ComboBoxItem Content="Saturación" />
+                    <ComboBoxItem Content="Absoluto" />
+                </ComboBox>
+
+                <TextBlock Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,4">Densidad:</TextBlock>
+                <ComboBox Name="DensityCombo" Grid.Row="5" Grid.Column="1" Margin="0,0,0,4" SelectedIndex="0">
+                    <ComboBoxItem Content="Mantener original" />
+                    <ComboBoxItem Content="300 ppi" />
+                </ComboBox>
+
+                <CheckBox Name="BpcCheck" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Content="Compensación de punto negro" IsChecked="True" Margin="0,2,0,0" />
+            </Grid>
+
+            <Button Name="ConvertBtn" Content="Convertir" Click="OnConvertClick" IsEnabled="False"
+                    HorizontalAlignment="Center" HorizontalContentAlignment="Center"
+                    Width="200" Height="34" FontWeight="SemiBold" Margin="0,6,0,0"/>
+
+            <TextBlock Name="StatusBlock" Foreground="DarkSlateGray" Margin="0,2,0,0" />
+        </StackPanel>
+    </DockPanel>
+</Window>

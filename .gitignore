@@ -1,0 +1,13 @@
+# Build artifacts
+rgb2cmyk-gui/.dotnet/
+rgb2cmyk-gui/.nuget/
+rgb2cmyk-gui/publish/
+rgb2cmyk-gui/src/bin/
+rgb2cmyk-gui/src/obj/
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+.idea/
