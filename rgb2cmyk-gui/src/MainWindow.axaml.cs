@@ -1,6 +1,8 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
@@ -14,6 +16,7 @@ namespace Rgb2CmykGui.Views;
 public partial class MainWindow : Window
 {
     private string? _inputPath;
+    private string? _lastOutputPath;
     private ColorProfile? _customProfile;
     private bool _initialized;
 
@@ -195,6 +198,10 @@ public partial class MainWindow : Window
         if (_inputPath == null) return;
 
         var status = this.FindControl<TextBlock>("StatusBlock")!;
+        var openBtn = this.FindControl<Button>("OpenFolderBtn")!;
+        openBtn.IsVisible = false;
+        _lastOutputPath = null;
+
         try
         {
             var options = BuildOptions();
@@ -202,11 +209,38 @@ public partial class MainWindow : Window
             status.Text = $"Convirtiendo a {modeLabel}…";
 
             var outputPath = CmykConverter.Convert(_inputPath, options);
+            _lastOutputPath = outputPath;
             status.Text = $"OK → {Path.GetFileName(outputPath)}";
+            openBtn.IsVisible = true;
         }
         catch (Exception ex)
         {
             status.Text = $"Error: {ex.Message}";
+        }
+    }
+
+    private void OnOpenFolderClick(object? sender, RoutedEventArgs e)
+    {
+        if (_lastOutputPath == null || !File.Exists(_lastOutputPath)) return;
+
+        var args = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? $"/select,\"{_lastOutputPath}\""
+            : RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                ? $"-R \"{_lastOutputPath}\""
+                : $"\"{Path.GetDirectoryName(_lastOutputPath)}\"";
+
+        var fileName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? "explorer.exe"
+            : RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+                ? "open"
+                : "xdg-open";
+
+        try
+        {
+            Process.Start(new ProcessStartInfo(fileName, args) { UseShellExecute = false });
+        }
+        catch
+        {
         }
     }
 }
